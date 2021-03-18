@@ -36,7 +36,11 @@
 		<h1 class="text-center">Universal List API</h1>
 		<h2 id="load_text" class="text-center">Loading...</h2>
 		<div id="lists_block" style="display: none">
-                        <p class="text-center">You can <a href="http://127.0.0.1:8080/site/login">login</a> to add a list</p>
+			{% if not username %}
+                        	<p class="text-center">You can <a href="/login">login</a> to add a list</p>
+			{% else %}
+				<p class="text-center">Logged in as {{username}}#<span style='opacity: 0.7'>{{disc}}</span></p>
+			{% endif %}
 	                <h2 class="text-center">Lists</h2>
 			<div id="lists">
 			</div>
