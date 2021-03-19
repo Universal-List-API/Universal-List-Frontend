@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 import config
 import Oauth
 from starlette.middleware.sessions import SessionMiddleware
+import requests
 
 discord_o = Oauth.Oauth()
 
@@ -14,7 +15,16 @@ app.add_middleware(SessionMiddleware, secret_key = config.session_key)
 
 @app.get("/")
 def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "username": request.session.get("username"), "disc": request.session.get("disc")})
+    return templates.TemplateResponse("index.html", {"request": request, "username": request.session.get("username"), "disc": request.session.get("disc"), "api_url": config.api_url})
+
+@app.get("/add_list")
+def add_list_route(request: Request):
+    return templates.TemplateResponse("add_list.html", {"request": request, "username": request.session.get("username"), "disc": request.session.get("disc"), "userid": request.session.get("userid"), "api_url": config.api_url})
+
+@app.get("/list/{url}")
+def list_render(request: Request, url: str):
+    sc = requests.get(config.api_url + "/list/" + url).status_code
+    return templates.TemplateResponse("list.html", {"request": request, "username": request.session.get("username"), "disc": request.session.get("disc"), "userid": request.session.get("userid"), "url": url, "api_url": config.api_url}, status_code = sc)
 
 @app.get("/login")
 def login(request: Request):

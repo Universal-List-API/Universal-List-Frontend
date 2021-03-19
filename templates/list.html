@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block head %}
+<style>
+	@media (min-width: 800px) {
+	html, body {
+		max-width: 100%;
+		overflow-x: hidden;
+	}
+	.form {
+		margin-left: 70px;
+	}
+	}
+	@media (max-width: 800px) {
+        .form {
+                margin-left: 10px;
+        }
+	}
+	.form-control {
+		min-width: 500px;
+		max-width: 500px;
+	}
+</style>
+{% endblock %}
+{% block content %}
+	<h2 class='text-center'>{{url}}</h2>
+        <h2 id="load_text" class="text-center">Loading...</h2>
+        <div id="lists_block" style="display: none" class="text-center">
+                <div id="lists" class="text-center" style="width: 100%; min-width: 100%">
+			<div id="lists-nf" class="text-center"></div>
+			<div id="list-info" style="position: relative; top: 100px;"></div>
+                </div>
+		<h3 id="error" class="text-center" style="color: red"></h3>
+        </div>
+	<div id="edit_text" style="display: none">
+		<h3 class='text-center'>You can add API endpoints or edit your list by entering your API Token below:</h3>
+	</div>
+        <script>
+		$.get({
+			url: _api_url + "/list/{{url}}",
+			statusCode: {
+				404: function(data) {
+					$("#error").html("Bot list could not be found")
+                                        $("#load_text").fadeOut('slow', function() {
+						$("#lists_block").fadeIn()
+                                        })
+				},
+				200: function(data) {
+					if(data.queue){
+						$("#error").html("This list is currently in queue and is awaiting verification")
+					}
+					// Create image
+					icon = document.createElement("img");
+					icon.src = data.icon;
+					icon.width = 50;
+					icon.classList.add("text-center");
+					icon.style.display = "block";
+					icon.style.marginLeft = "auto";
+					icon.style.marginRight = "auto"
+					$("#lists-nf").append(icon);
+					text = `URL: <a href='${data.url}'>${data.url}</a>`; // Initial text
+					$("#list-info").html(text);
+					$("#load_text").fadeOut('slow', function() {
+                                                $("#lists_block").fadeIn()
+                                        });
+				}
+			}
+		})
+	</script>
+{% endblock %}
