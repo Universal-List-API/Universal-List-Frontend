@@ -23,8 +23,7 @@ def add_list_route(request: Request):
 
 @app.get("/list/{url}")
 def list_render(request: Request, url: str):
-    sc = requests.get(config.api_url + "/list/" + url).status_code
-    return templates.TemplateResponse("list.html", {"request": request, "username": request.session.get("username"), "disc": request.session.get("disc"), "userid": request.session.get("userid"), "url": url, "api_url": config.api_url}, status_code = sc)
+    return templates.TemplateResponse("list.html", {"request": request, "username": request.session.get("username"), "disc": request.session.get("disc"), "userid": request.session.get("userid"), "url": url, "api_url": config.api_url})
 
 @app.get("/login")
 def login(request: Request):

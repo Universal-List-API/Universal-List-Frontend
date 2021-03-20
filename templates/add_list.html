@@ -37,7 +37,7 @@
                 <div class="col-12">
                         <label for="api_url" class="form-label">List API URL</label>
                         <input type="text" class="form-control" id="api_url" name="api_url" aria-describedby="apiurlHelp" value="https://" required>
-                        <div id="apiurlHelp" class="form-text">The URL of your list. Must be HTTPS</div>
+                        <div id="apiurlHelp" class="form-text">The API URL of your list. Must be HTTPS</div>
                 </div>
 		</div>
                 <div class="row row-cols-lg-auto g-3">
@@ -110,7 +110,6 @@
 				data: JSON.stringify(data),
 				statusCode: {
 					200: function(data){
-						alert(`You will be DM'd with your lists API token again once you add your list.\nPlease keep a note of the below API token as you will need it to add API endpoints or edit your list:\n\n${data.api_token}`);
 						window.location.href = "/list/" + url.replace("https://", "").replace("http://", "");
 					},
 					400: function(data) {

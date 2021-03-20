@@ -25,14 +25,15 @@
 	<h2 class='text-center'>{{url}}</h2>
         <h2 id="load_text" class="text-center">Loading...</h2>
         <div id="lists_block" style="display: none" class="text-center">
-                <div id="lists" class="text-center" style="width: 100%; min-width: 100%">
+		<img id="icon" style="display: none"/>
+                <div id="lists" class="text-center">
 			<div id="lists-nf" class="text-center"></div>
-			<div id="list-info" style="position: relative; top: 100px;"></div>
+			<div id="list-info"></div>
                 </div>
 		<h3 id="error" class="text-center" style="color: red"></h3>
         </div>
-	<div id="edit_text" style="display: none">
-		<h3 class='text-center'>You can add API endpoints or edit your list by entering your API Token below:</h3>
+	<div class="text-center">
+		<p id="edit_text" style="display: none;"></p>
 	</div>
         <script>
 		$.get({
@@ -46,22 +47,27 @@
                                         })
 				},
 				200: function(data) {
+					console.log(data)
 					if(data.queue){
 						$("#error").html("This list is currently in queue and is awaiting verification")
 					}
 					// Create image
-					icon = document.createElement("img");
+					icon = document.querySelector("#icon");
 					icon.src = data.icon;
 					icon.width = 50;
 					icon.classList.add("text-center");
 					icon.style.display = "block";
 					icon.style.marginLeft = "auto";
 					icon.style.marginRight = "auto"
-					$("#lists-nf").append(icon);
-					text = `URL: <a href='${data.url}'>${data.url}</a>`; // Initial text
+					icon.style.display = "block";
+					text = `<strong>This is <a href='${data.url}'>${data.url}</a></strong>`; // Initial text
+					text += `<br/>API URL: <a href='${data.api_url}'>${data.api_url}</a>`
 					$("#list-info").html(text);
+                                        $("#edit_text").html("Checking whether you can edit this list...")
 					$("#load_text").fadeOut('slow', function() {
-                                                $("#lists_block").fadeIn()
+						$("#lists_block").fadeIn('slow', function() {
+							$("#edit_text").fadeIn()
+						});
                                         });
 				}
 			}
