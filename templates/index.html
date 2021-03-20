@@ -11,6 +11,7 @@
 	<script>
 		$.get({
 			url: _api_url + "/lists",
+			headers: {"Bypass-Tunnel-Reminder": "0"},
 			statusCode: {
 				200: function(data){
 					if(data.code != 1003) {

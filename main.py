@@ -19,7 +19,7 @@ def index(request: Request):
 
 @app.get("/add_list")
 def add_list_route(request: Request):
-    return templates.TemplateResponse("add_list.html", {"request": request, "username": request.session.get("username"), "disc": request.session.get("disc"), "userid": request.session.get("userid"), "api_url": config.api_url})
+    return templates.TemplateResponse("add_list.html", {"request": request, "username": request.session.get("username"), "disc": request.session.get("disc"), "userid": request.session.get("userid"), "api_url": config.api_url, "api_token": request.session.get("api_token")})
 
 @app.get("/list/{url}")
 def list_render(request: Request, url: str):
@@ -45,14 +45,14 @@ async def confirm_login(request: Request, code: str, state: str):
     except:
         pass
     access_token = await discord_o.get_access_token(code, ['identify',])
-    userjson = await discord_o.get_user_json(access_token["access_token"])
-    if userjson["id"]:
-        pass
-    else:
-        return RedirectResponse("/")
     request.session["access_token"] = access_token
+    userjson = requests.get(config.api_url + f"/login?access_token={access_token['access_token']}")
+    if userjson.status_code == 400:
+        return ORJSONResponse(userjson.json(), status_code = 400)
+    userjson = userjson.json()
     request.session["userid"] = userjson["id"]
     print(userjson)
+    request.session["api_token"] = userjson["api_token"]
     request.session["disc"] = userjson["dash"]
     request.session["username"] = str(userjson["name"])
     if userjson.get("avatar"):

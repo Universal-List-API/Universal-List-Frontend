@@ -82,11 +82,12 @@
 				<label class="form-check-label" for="flexCheckDefault">Supports HTML Long Description</label>
 			</div>
 		</div>
-		<button class="btn btn-primary text-center">Add List</button>
+		<button class="btn btn-primary text-center" id="al-button">Add List</button>
 	</form>
 	<script>
 		$('#form').submit(function (evt) {
 			evt.preventDefault();
+			$("#al-button").html("Adding List...")
 			url = $("#url").val();
 			api_url = $("#api_url").val();
 			api_docs = $("#api_docs").val();
@@ -104,6 +105,7 @@
 			$.ajax({
 				method: "PUT",
 				url: _api_url + "/lists",
+				headers: {"Bypass-Tunnel-Reminder": "0", "User-API-Token": "{{api_token}}"},
 				contentType: "application/json",
 				data: JSON.stringify(data),
 				statusCode: {
@@ -113,9 +115,11 @@
 					},
 					400: function(data) {
 						alert(data.responseJSON.message);
+						$("#al-button").html("Add List")
 					},
 					429: function(data) {
 						alert("You are being ratelimited")
+						$("#al-button").html("Add List")
 					}
 				}
 			})

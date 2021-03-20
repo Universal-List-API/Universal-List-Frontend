@@ -37,6 +37,7 @@
         <script>
 		$.get({
 			url: _api_url + "/list/{{url}}",
+			headers: {"Bypass-Tunnel-Reminder": "0"},
 			statusCode: {
 				404: function(data) {
 					$("#error").html("Bot list could not be found")
